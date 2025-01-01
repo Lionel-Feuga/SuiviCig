@@ -15,20 +15,22 @@ exports.addOrUpdateGoal = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    const adjustedEndDate = new Date(endDate);
+
     const existingGoal = await Goal.findOne({
       where: {
         userId,
         [Op.or]: [
           {
-            startDate: { [Op.between]: [startDate, endDate] },
+            startDate: { [Op.between]: [startDate, adjustedEndDate] },
           },
           {
-            endDate: { [Op.between]: [startDate, endDate] },
+            endDate: { [Op.between]: [startDate, adjustedEndDate] },
           },
           {
             [Op.and]: [
               { startDate: { [Op.lte]: startDate } },
-              { endDate: { [Op.gte]: endDate } },
+              { endDate: { [Op.gte]: adjustedEndDate } },
             ],
           },
         ],
@@ -37,32 +39,33 @@ exports.addOrUpdateGoal = async (req, res) => {
 
     if (existingGoal) {
       existingGoal.startDate = startDate;
-      existingGoal.endDate = endDate;
+      existingGoal.endDate = adjustedEndDate;
       existingGoal.maxCigarettesPerDay = maxCigarettesPerDay;
       await existingGoal.save();
 
       return res.status(200).json({
-        message: "Objectif mis à jour avec succès",
+        message: 'Objectif mis à jour avec succès',
         goal: existingGoal,
       });
     } else {
       const newGoal = await Goal.create({
         userId,
         startDate,
-        endDate,
+        endDate: adjustedEndDate,
         maxCigarettesPerDay,
       });
 
       return res.status(201).json({
-        message: "Nouvel objectif créé avec succès",
+        message: 'Nouvel objectif créé avec succès',
         goal: newGoal,
       });
     }
   } catch (error) {
-    console.error("Erreur lors de l’ajout ou de la mise à jour de l’objectif:", error);
-    res.status(500).json({ error: "Erreur lors de l’ajout ou de la mise à jour de l’objectif" });
+    console.error('Erreur lors de l’ajout ou de la mise à jour de l’objectif:', error);
+    res.status(500).json({ error: "Erreur lors de l'ajout ou de la mise à jour de l'objectif" });
   }
 };
+
 
 exports.deleteGoal = async (req, res) => {
   const { id } = req.params;
