@@ -4,14 +4,14 @@ const DailyRecord = require('./DailyRecord');
 const Goal = require('./Goal');
 const Statistic = require('./Statistic');
 
-User.hasMany(DailyRecord, { foreignKey: 'userId' });
-DailyRecord.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(DailyRecord, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+DailyRecord.belongsTo(User, { foreignKey: 'user_id' });
 
-User.hasMany(Goal, { foreignKey: 'userId' });
-Goal.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Goal, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+Goal.belongsTo(User, { foreignKey: 'user_id' });
 
-User.hasOne(Statistic, { foreignKey: 'userId' });
-Statistic.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Statistic, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+Statistic.belongsTo(User, { foreignKey: 'user_id' });
 
 module.exports = {
   sequelize,

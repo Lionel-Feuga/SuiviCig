@@ -2,7 +2,6 @@ const DailyRecord = require('../models/DailyRecord');
 
 exports.getDailyRecords = async (req, res) => {
   try {
-    console.log('Utilisateur ID:', req.user.id);
     const records = await DailyRecord.findAll({ where: { userId: req.user.id } });
     res.json(records);
   } catch (error) {
@@ -11,8 +10,8 @@ exports.getDailyRecords = async (req, res) => {
   }
 };
 
-exports.addDailyRecord = async (req, res) => {
-  const { date, cigarettesSmoked, comment } = req.body;
+exports.addOrUpdateDailyRecord = async (req, res) => {
+  const { date, cigarettesSmoked } = req.body;
 
   try {
     let record = await DailyRecord.findOne({
@@ -24,7 +23,6 @@ exports.addDailyRecord = async (req, res) => {
 
     if (record) {
       record.cigarettesSmoked = cigarettesSmoked;
-      record.comment = comment || record.comment;
       await record.save();
       return res.json({ message: "Enregistrement mis à jour", record });
     } else {
@@ -32,12 +30,11 @@ exports.addDailyRecord = async (req, res) => {
         userId: req.user.id,
         date,
         cigarettesSmoked,
-        comment,
       });
       return res.status(201).json({ message: "Enregistrement créé", record });
     }
   } catch (error) {
-    console.error("Erreur lors de l’ajout de l’enregistrement", error);
-    res.status(500).json({ error: "Erreur lors de l’ajout de l’enregistrement" });
+    console.error("Erreur lors de l'ajout ou de la mise à jour de l'enregistrement :", error);
+    res.status(500).json({ error: "Erreur lors de l'ajout ou de la mise à jour de l'enregistrement" });
   }
 };

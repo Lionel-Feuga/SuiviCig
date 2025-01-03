@@ -17,7 +17,13 @@ const authenticate = (req, res, next) => {
     req.user = decoded; 
     next(); 
   } catch (err) {
-    res.status(401).json({ error: 'Token invalide.' });
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Token expiré. Veuillez vous reconnecter.' });
+    } else if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ error: 'Token invalide.' });
+    } else {
+      return res.status(500).json({ error: 'Erreur interne du serveur.' });
+    }
   }
 };
 

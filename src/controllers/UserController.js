@@ -39,3 +39,23 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la connexion" });
   }
 };
+
+const blacklist = new Set();
+
+exports.logout = (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; 
+  if (token) {
+    blacklist.add(token); 
+    return res.status(200).json({ message: "Déconnexion réussie." });
+  }
+  return res.status(400).json({ message: "Token introuvable." });
+};
+
+exports.isTokenValid = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (blacklist.has(token)) {
+    return res.status(401).json({ message: "Token révoqué." });
+  }
+  next();
+};
+
