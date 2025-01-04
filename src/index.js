@@ -7,7 +7,20 @@ const routes = require("./routes");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ["https://suivicig-back-production.up.railway.app"]; 
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, 
+};
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 
 app.use("/api", routes);
