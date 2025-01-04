@@ -24,6 +24,7 @@ const User = sequelize.define('User', {
     field: 'updated_at', 
   },
 }, {
+  tableName:'users',
   timestamps: true,
 });
 

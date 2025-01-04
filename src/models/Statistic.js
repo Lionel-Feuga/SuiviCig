@@ -31,6 +31,7 @@ const Statistic = sequelize.define('Statistic', {
       field: 'updated_at', 
     },
   }, {
+    tableName: 'statistics',
     timestamps: true,
   });
   
