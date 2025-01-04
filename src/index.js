@@ -49,5 +49,6 @@ const syncDatabase = async () => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   await syncDatabase();
+  console.log("Base de données utilisée :", process.env.DB_NAME);
   console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });
