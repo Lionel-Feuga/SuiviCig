@@ -7,7 +7,7 @@ const routes = require("./routes");
 
 const app = express();
 
-const allowedOrigins = ["https://suivi-cig-front.vercel.app"];
+const allowedOrigins = ["https://suivi-cig-front-mackrsvig-feugas-projects.vercel.app"];
 const corsOptions = {
   origin: (origin, callback) => {
     console.log(`Requête provenant de : ${origin}`);
