@@ -7,19 +7,23 @@ const routes = require("./routes");
 
 const app = express();
 
-const allowedOrigins = ["https://suivi-cig-front.vercel.app"]; 
+const allowedOrigins = ["https://suivi-cig-front.vercel.app"];
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log(`Requête provenant de : ${origin}`);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`Origine non autorisée : ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
   credentials: true, 
 };
 app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 app.use(bodyParser.json());
 
