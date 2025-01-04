@@ -7,7 +7,7 @@ const routes = require("./routes");
 
 const app = express();
 
-const allowedOrigins = ["https://suivicig-back-production.up.railway.app"]; 
+const allowedOrigins = ["https://suivi-cig-front.vercel.app/"]; 
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
