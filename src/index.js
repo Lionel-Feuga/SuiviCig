@@ -30,11 +30,17 @@ app.use(bodyParser.json());
 
 app.use("/api", routes);
 
+const [results] = await sequelize.query("SELECT DATABASE() AS dbName");
+console.log("Base de données active :", results[0].dbName);
+
 const syncDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connexion à la base de données réussie.");
 
+    const [results] = await sequelize.query("SELECT DATABASE() AS dbName");
+    console.log("Base de données active :", results[0].dbName);
+    
     await sequelize.sync({ alter: false });
     console.log("Base de données synchronisée.");
   } catch (error) {

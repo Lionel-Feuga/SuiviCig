@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Create 'users' table
-    await queryInterface.createTable('users', {
+  async up(queryInterface, Sequelize) {
+    // Table `users`
+    await queryInterface.createTable("users", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -26,17 +26,17 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
 
-    // Create 'daily_records' table
-    await queryInterface.createTable('daily_records', {
+    // Table `daily_records`
+    await queryInterface.createTable("daily_records", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -47,10 +47,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       date: {
         type: Sequelize.DATEONLY,
@@ -59,6 +59,7 @@ module.exports = {
       cigarettes_smoked: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        defaultValue: 0,
       },
       comment: {
         type: Sequelize.TEXT,
@@ -67,17 +68,17 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
 
-    // Create 'goals' table
-    await queryInterface.createTable('goals', {
+    // Table `goals`
+    await queryInterface.createTable("goals", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -88,10 +89,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       start_date: {
         type: Sequelize.DATEONLY,
@@ -108,17 +109,17 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
 
-    // Create 'statistics' table
-    await queryInterface.createTable('statistics', {
+    // Table `statistics`
+    await queryInterface.createTable("statistics", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -129,10 +130,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       total_cigarettes_saved: {
         type: Sequelize.INTEGER,
@@ -152,20 +153,21 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('statistics');
-    await queryInterface.dropTable('goals');
-    await queryInterface.dropTable('daily_records');
-    await queryInterface.dropTable('users');
+  async down(queryInterface, Sequelize) {
+    // Supprimer les tables dans l'ordre inverse des relations
+    await queryInterface.dropTable("statistics");
+    await queryInterface.dropTable("goals");
+    await queryInterface.dropTable("daily_records");
+    await queryInterface.dropTable("users");
   },
 };

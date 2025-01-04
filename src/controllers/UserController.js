@@ -11,10 +11,16 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Mot de passe haché :", hashedPassword);
 
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
+    await sequelize.transaction(async (t) => {
+      const user = await User.create(
+        {
+          username,
+          email,
+          password: hashedPassword,
+        },
+        { transaction: t }
+      );
+      console.log("Utilisateur créé :", user);
     });
 
     console.log("Utilisateur créé :", user);
