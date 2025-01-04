@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sequelize = require("../config/db");
 
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -11,8 +12,9 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Mot de passe haché :", hashedPassword);
 
+    let user; 
     await sequelize.transaction(async (t) => {
-      const user = await User.create(
+      user = await User.create(
         {
           username,
           email,
@@ -20,10 +22,9 @@ exports.register = async (req, res) => {
         },
         { transaction: t }
       );
-      console.log("Utilisateur créé :", user);
+      console.log("Utilisateur créé dans la transaction :", user);
     });
 
-    console.log("Utilisateur créé :", user);
     res.status(201).json({ message: "Utilisateur créé avec succès", user });
   } catch (error) {
     console.error("Erreur lors de la création de l’utilisateur :", error);
@@ -38,15 +39,14 @@ exports.login = async (req, res) => {
     if (!user) return res.status(404).json({ error: "Utilisateur non trouvé" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match)
-      return res.status(401).json({ error: "Mot de passe incorrect" });
+    if (!match) return res.status(401).json({ error: "Mot de passe incorrect" });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     res.json({ token });
   } catch (error) {
-    console.error("Erreur lors de la connexion:", error);
+    console.error("Erreur lors de la connexion :", error);
     res.status(500).json({ error: "Erreur lors de la connexion" });
   }
 };
@@ -54,9 +54,9 @@ exports.login = async (req, res) => {
 const blacklist = new Set();
 
 exports.logout = (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1]; 
+  const token = req.headers.authorization?.split(" ")[1];
   if (token) {
-    blacklist.add(token); 
+    blacklist.add(token);
     return res.status(200).json({ message: "Déconnexion réussie." });
   }
   return res.status(400).json({ message: "Token introuvable." });
@@ -69,4 +69,3 @@ exports.isTokenValid = (req, res, next) => {
   }
   next();
 };
-
