@@ -9,15 +9,16 @@ const app = express();
 
 const allowedOrigins = ["https://suivi-cig-front-mackrsvig-feugas-projects.vercel.app"];
 const corsOptions = {
-  origin: (origin, callback) => {
-    console.log(`Requête provenant de : ${origin}`);
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`Origine non autorisée : ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  // origin: (origin, callback) => {
+  //   console.log(`Requête provenant de : ${origin}`);
+  //   if (!origin || allowedOrigins.includes(origin)) {
+  //     callback(null, true);
+  //   } else {
+  //     console.error(`Origine non autorisée : ${origin}`);
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
   credentials: true, 
 };
