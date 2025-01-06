@@ -1,15 +1,48 @@
-const DailyRecord = require('../models/DailyRecord');
+const DailyRecord = require("../models/DailyRecord");
 const sequelize = require("../config/db");
 
-  exports.getDailyRecords = async (req, res) => {
-    try {
-      const records = await DailyRecord.findAll({ where: { userId: req.user.id } });
-      res.json(records);
-    } catch (error) {
-      console.error("Erreur lors de l’ajout de l’enregistrement", error);
-      res.status(500).json({ error: 'Erreur lors de la récupération des enregistrements' });
+exports.getDailyRecords = async (req, res) => {
+  try {
+    const records = await DailyRecord.findAll({
+      where: { userId: req.user.id },
+    });
+    res.json(records);
+  } catch (error) {
+    console.error("Erreur lors de l’ajout de l’enregistrement", error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des enregistrements" });
+  }
+};
+
+exports.getDailyRecordByDate = async (req, res) => {
+  const { date } = req.query;
+
+  try {
+    const record = await DailyRecord.findOne({
+      where: {
+        userId: req.user.id,
+        date,
+      },
+    });
+
+    if (!record) {
+      return res
+        .status(404)
+        .json({ message: "Aucun enregistrement trouvé pour cette date" });
     }
-  };
+
+    res.json(record);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération de l'enregistrement :",
+      error
+    );
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération de l'enregistrement" });
+  }
+};
 
 exports.addOrUpdateDailyRecord = async (req, res) => {
   const { date, cigarettesSmoked } = req.body;
@@ -21,12 +54,12 @@ exports.addOrUpdateDailyRecord = async (req, res) => {
           userId: req.user.id,
           date,
         },
-        transaction, 
+        transaction,
       });
 
       if (record) {
         record.cigarettesSmoked = cigarettesSmoked;
-        await record.save({ transaction }); 
+        await record.save({ transaction });
         return res.json({ message: "Enregistrement mis à jour", record });
       } else {
         record = await DailyRecord.create(
@@ -35,7 +68,7 @@ exports.addOrUpdateDailyRecord = async (req, res) => {
             date,
             cigarettesSmoked,
           },
-          { transaction } 
+          { transaction }
         );
         return res.status(201).json({ message: "Enregistrement créé", record });
       }
@@ -47,6 +80,9 @@ exports.addOrUpdateDailyRecord = async (req, res) => {
     );
     res
       .status(500)
-      .json({ error: "Erreur lors de l'ajout ou de la mise à jour de l'enregistrement" });
+      .json({
+        error:
+          "Erreur lors de l'ajout ou de la mise à jour de l'enregistrement",
+      });
   }
 };

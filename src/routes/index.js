@@ -14,7 +14,8 @@ router.post("/auth/logout", authenticate, userController.logout);
 router.use(authenticate, userController.isTokenValid);
 
 // Routes des enregistrements journaliers
-router.get("/daily-records", dailyRecordController.getDailyRecords);
+router.get("/daily-records/all", dailyRecordController.getDailyRecords);
+router.get("/daily-records", dailyRecordController.getDailyRecordByDate);
 router.post("/daily-records", dailyRecordController.addOrUpdateDailyRecord);
 
 // Routes des objectifs
