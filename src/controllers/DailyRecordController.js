@@ -1,14 +1,15 @@
 const DailyRecord = require('../models/DailyRecord');
+const sequelize = require("../config/db");
 
-exports.getDailyRecords = async (req, res) => {
-  try {
-    const records = await DailyRecord.findAll({ where: { userId: req.user.id } });
-    res.json(records);
-  } catch (error) {
-    console.error("Erreur lors de l’ajout de l’enregistrement", error);
-    res.status(500).json({ error: 'Erreur lors de la récupération des enregistrements' });
-  }
-};
+  exports.getDailyRecords = async (req, res) => {
+    try {
+      const records = await DailyRecord.findAll({ where: { userId: req.user.id } });
+      res.json(records);
+    } catch (error) {
+      console.error("Erreur lors de l’ajout de l’enregistrement", error);
+      res.status(500).json({ error: 'Erreur lors de la récupération des enregistrements' });
+    }
+  };
 
 exports.addOrUpdateDailyRecord = async (req, res) => {
   const { date, cigarettesSmoked } = req.body;
