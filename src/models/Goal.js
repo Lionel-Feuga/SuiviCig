@@ -8,14 +8,16 @@ const Goal = sequelize.define('Goal', {
     field:'user_id',
   },
   startDate: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
-    field:'start_date',
+    defaultValue: sequelize.literal("CURRENT_DATE + INTERVAL '3 HOURS'"), 
+    field: 'start_date',
   },
   endDate: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
-    field:'end_date',
+    defaultValue: sequelize.literal("CURRENT_DATE + INTERVAL '23 HOURS 59 MINUTES'"), 
+    field: 'end_date',
   },
   maxCigarettesPerDay: {
     type: DataTypes.INTEGER,

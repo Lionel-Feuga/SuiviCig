@@ -16,7 +16,6 @@ exports.addOrUpdateGoal = async (req, res) => {
 
   try {
     const adjustedEndDate = new Date(endDate);
-    adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
     const existingGoal = await Goal.findOne({
       where: {
@@ -31,7 +30,7 @@ exports.addOrUpdateGoal = async (req, res) => {
           {
             [Op.and]: [
               { startDate: { [Op.lte]: startDate } },
-              { endDate: { [Op.gte]: adjustedEndDate } }, 
+              { endDate: { [Op.gte]: adjustedEndDate } },
             ],
           },
         ],
@@ -66,6 +65,7 @@ exports.addOrUpdateGoal = async (req, res) => {
     res.status(500).json({ error: "Erreur lors de l'ajout ou de la mise à jour de l'objectif" });
   }
 };
+
 
 exports.deleteGoal = async (req, res) => {
   const { id } = req.params;
@@ -102,3 +102,4 @@ exports.deleteAllGoals = async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la suppression des objectifs" });
   }
 };
+
